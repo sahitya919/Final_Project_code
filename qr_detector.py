@@ -134,6 +134,10 @@ def predict_qr(img_path):
     else:
         print(f"⚠️ MALICIOUS / PHISHING QR  ({confidence:.2f}% confidence)")
 
+def detect_qr(image_path):
+    """Wrapper for main.py"""
+    return predict_qr(image_path)
+
 if __name__ == "__main__":
     choice = input("Enter 'T' to train or 'P' to predict: ").strip().upper()
     if choice == 'T':

@@ -115,6 +115,12 @@ def predict_email(user_input, encryption_module):
 # ===================== INITIALIZE ENCRYPTION =====================
 encryption_module = EncryptionModule(FIXED_KEY)
 
+def detect_email(email_text):
+    """Wrapper for main.py"""
+    result = predict_email(email_text, encryption_module)
+    print(f"Prediction: {result}")
+    return result
+
 if __name__ == "__main__":
     # ===================== USER INPUT =====================
     print("\nEnter EMAIL (plain OR encrypted):")
