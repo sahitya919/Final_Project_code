@@ -19,7 +19,9 @@ PHISHING_PATH = os.path.join(BASE_PATH, "malicious")
 
 IMG_SIZE = 128
 SAMPLES_PER_CLASS = 5000  # ✅ FIXED
-MODEL_PATH = "qr_phishing_cnn.h5"
+MODEL_FILENAME = "qr_phishing_cnn.h5"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(SCRIPT_DIR, MODEL_FILENAME)
 
 def load_images(folder, label, limit):
     X, y = [], []
