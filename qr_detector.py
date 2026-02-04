@@ -106,9 +106,14 @@ def train_model():
     print(f"💾 Model saved to {MODEL_PATH}")
 
 def predict_qr(img_path):
+    # Clean up input path (remove quotes and extra whitespace)
+    img_path = img_path.strip().strip('"').strip("'")
+    
     if not os.path.exists(MODEL_PATH):
-        print(f"❌ Model file {MODEL_PATH} not found. Please train the model first.")
-        return
+        return f"❌ Model file {MODEL_PATH} not found."
+
+    if not os.path.exists(img_path):
+        return f"❌ File not found: {img_path}"
 
     model = load_model(MODEL_PATH)
     print(f"📂 Predicting for: {img_path}")
@@ -116,8 +121,7 @@ def predict_qr(img_path):
     # Read image
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     if img is None:
-        print("❌ Invalid image")
-        return
+        return "❌ Invalid image: Unable to read file as grayscale"
 
     # Preprocess
     img_processed = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
@@ -130,13 +134,15 @@ def predict_qr(img_path):
 
     # Result
     if class_id == 0:
-        print(f"✅ LEGITIMATE QR  ({confidence:.2f}% confidence)")
+        return f"✅ LEGITIMATE QR  ({confidence:.2f}% confidence)"
     else:
-        print(f"⚠️ MALICIOUS / PHISHING QR  ({confidence:.2f}% confidence)")
+        return f"⚠️ MALICIOUS / PHISHING QR  ({confidence:.2f}% confidence)"
 
 def detect_qr(image_path):
     """Wrapper for main.py"""
-    return predict_qr(image_path)
+    result = predict_qr(image_path)
+    print(f"Prediction: {result}")
+    return result
 
 if __name__ == "__main__":
     choice = input("Enter 'T' to train or 'P' to predict: ").strip().upper()
