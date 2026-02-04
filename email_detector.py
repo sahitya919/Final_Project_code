@@ -30,15 +30,15 @@ class EncryptionModule:
 
 # ===================== LOAD DATASET =====================
 dataset_file = "CEAS_08.csv"
-if not os.path.exists(dataset_file):
-    print(f"Dataset {dataset_file} not found locally. Searching in Downloads...")
-    alt_path = r"C:\Users\DELL\Downloads\major_datasets\CEAS_08.csv"
-    if os.path.exists(alt_path):
-        import shutil
-        shutil.copy(alt_path, dataset_file)
-    else:
-        print("Dataset not found. Please ensure CEAS_08.csv is available.")
-        exit()
+script_dir = os.path.dirname(os.path.abspath(__file__))
+abs_dataset_path = os.path.join(script_dir, dataset_file)
+
+if not os.path.exists(abs_dataset_path):
+    print(f"❌ Error: Dataset {dataset_file} not found at {abs_dataset_path}.")
+    print("Please ensure the CSV file is in the same directory as the script.")
+    exit(1)
+
+dataset_file = abs_dataset_path
 
 # Initial diagnostic load as requested by user
 print("--- Loading dataset for diagnostics ---")
@@ -123,9 +123,16 @@ def detect_email(email_text):
 
 if __name__ == "__main__":
     # ===================== USER INPUT =====================
-    print("\nEnter EMAIL (plain OR encrypted):")
+    print("\nEnter EMAIL (plain OR encrypted). Type 'END' on a new line when finished:")
     try:
-        user_input = input().strip()
+        lines = []
+        while True:
+            line = input()
+            if line.strip().upper() == "END":
+                break
+            lines.append(line)
+        user_input = "\n".join(lines).strip()
+        
         # ===================== RESULT =====================
         result = predict_email(user_input, encryption_module)
         print("\nFinal Prediction:", result)

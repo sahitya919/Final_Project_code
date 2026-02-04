@@ -41,14 +41,24 @@ class EncryptionModule:
 
 # ===================== LOAD DATASET =====================
 dataset_file = "phishing_reduced_dataset.csv"
-if not os.path.exists(dataset_file):
-    # Try to find it in the same directory or prepare it
-    if not os.path.exists("prepare_dataset.py"):
-         print(f"Dataset {dataset_file} not found and prepare_dataset.py missing.")
-         exit()
-    os.system("python prepare_dataset.py")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+abs_dataset_file = os.path.join(script_dir, dataset_file)
 
-df = pd.read_csv(dataset_file)
+if not os.path.exists(abs_dataset_file):
+    print(f"Dataset {dataset_file} not found. Attempting to prepare it...")
+    prepare_script = os.path.join(script_dir, "prepare_dataset.py")
+    if not os.path.exists(prepare_script):
+         print(f"❌ Error: {prepare_script} missing.")
+         exit(1)
+    
+    # Run preparation script in the correct directory
+    import subprocess
+    result = subprocess.run(["python", prepare_script], cwd=script_dir)
+    if result.returncode != 0:
+        print("❌ Error: Dataset preparation failed.")
+        exit(1)
+
+df = pd.read_csv(abs_dataset_file)
 # print("Dataset shape:", df.shape)
 
 X = df.drop(columns=["url", "label"])

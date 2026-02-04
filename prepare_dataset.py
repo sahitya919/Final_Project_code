@@ -1,9 +1,19 @@
 import pandas as pd
 import numpy as np
+import os
 
 # ===================== LOAD DATASET =====================
 # Path updated to point to the local dataset location
-dataset_path = r"C:\Users\DELL\Downloads\major_datasets\PhiUSIIL_Phishing_URL_Dataset.csv"
+dataset_path = "PhiUSIIL_Phishing_URL_Dataset.csv"
+if not os.path.exists(dataset_path):
+    # Try looking in the same directory as the script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    dataset_path = os.path.join(script_dir, "PhiUSIIL_Phishing_URL_Dataset.csv")
+
+if not os.path.exists(dataset_path):
+    print(f"❌ Error: Dataset file '{dataset_path}' not found.")
+    exit(1)
+
 df = pd.read_csv(dataset_path)
 
 # ===================== CREATE REQUIRED FEATURES =====================
