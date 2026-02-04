@@ -140,9 +140,34 @@ def predict_qr(img_path):
     else:
         return f"⚠️ MALICIOUS / PHISHING QR  ({confidence:.2f}% confidence)"
 
-def detect_qr(image_path):
-    """Wrapper for main.py"""
-    result = predict_qr(image_path)
+def select_and_predict_qr():
+    """Helper to simulate file upload/selection in a local environment"""
+    import tkinter as tk
+    from tkinter import filedialog
+    
+    root = tk.Tk()
+    root.withdraw()  # Hide the main tkinter window
+    root.attributes("-topmost", True) # Bring to front
+    
+    print("\n📂 Opening file selection dialog...")
+    file_path = filedialog.askopenfilename(
+        title="Select QR Image",
+        filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp *.gif")]
+    )
+    root.destroy()
+    
+    if not file_path:
+        return "❌ No file selected."
+    
+    return predict_qr(file_path)
+
+def detect_qr(image_path=None):
+    """Wrapper for main.py. If no path is provided, it opens a file selector."""
+    if not image_path:
+        result = select_and_predict_qr()
+    else:
+        result = predict_qr(image_path)
+    
     print(f"Prediction: {result}")
     return result
 

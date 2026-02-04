@@ -28,12 +28,19 @@ elif choice == "3":
     import os
     from qr_detector import detect_qr, train_model, MODEL_PATH
     if not os.path.exists(MODEL_PATH):
-        print(f"\n🚀 QR Model not found at {MODEL_PATH}. Starting training (this may take a few minutes)...")
+        print(f"\n🚀 QR Model not found. Starting training...")
         train_model()
+    
+    print("\n1. Paste Image Path")
+    print("2. Select File (Upload)")
+    qr_choice = input("Choice: ").strip()
+    
+    if qr_choice == "2":
+        result = detect_qr() # Triggers file dialog
     else:
-        print("\n✅ QR Model found. Ready for prediction.")
-    image_path = input("Enter QR image path: ")
-    result = detect_qr(image_path)
+        image_path = input("Enter QR image path: ")
+        result = detect_qr(image_path)
+    
     print(f"\nFinal Result: {result}")
 
 else:
