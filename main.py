@@ -25,7 +25,11 @@ elif choice == "2":
     print(f"\nFinal Result: {result}")
 
 elif choice == "3":
-    from qr_detector import detect_qr
+    import os
+    from qr_detector import detect_qr, train_model
+    if not os.path.exists("qr_phishing_cnn.h5"):
+        print("\n🚀 QR Model not found. Starting training (this may take a few minutes)...")
+        train_model()
     image_path = input("Enter QR image path: ")
     result = detect_qr(image_path)
     print(f"\nFinal Result: {result}")
